@@ -1,0 +1,41 @@
+html{
+    margin: 10px;
+}
+
+.lg-width-input{
+    width: 500px;
+}
+
+.mid-width-input{
+    width: 300px;
+    display: inline;
+}
+
+.sm-width-input{
+    width:50px;
+    display: inline;
+}
+
+.indent{
+    margin-left:20px;
+}
+
+.overflow-scroll{
+    overflow: scroll;
+    height: 200px;
+    width: 300px;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.align-bottom{
+    margin-top: 20px;
+}
+
+.top-border{
+    border-top: 1px solid black;
+}
+
+.yellow{
+    color: yellow;
+}

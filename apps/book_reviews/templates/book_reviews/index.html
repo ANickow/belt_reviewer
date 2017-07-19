@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'book_reviews/css/styles.css' %}" media="screen" title="no title"  charset="utf-8">
+    <title>Welcome</title>
+</head>
+<body>
+    <div class="row">
+        <div class='col-md-12'>
+            <h3>Welcome!</h3> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+        <h3>Registration</h3>
+            {% if messages %} 
+                {% if request.session.message_location == 'registration' %}
+                    {% for message in messages %}
+                        <p class='text-uppercase'><strong>{{message}}</strong></p>
+                    {% endfor %} 
+                {% endif %}
+            {% endif %}
+            <form action="/register" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for'name'>Name:</label>
+                    <input type="text" name="name">
+                </div>
+                <div class="form-group">
+                    <label for'alias'>Alias:</label>
+                    <input type="text" name="alias">
+                </div>
+                <div class="form-group">
+                    <label for'email'>Email:</label>
+                    <input type="text" name="email">
+                </div>
+                <div class="form-group">
+                    <label for'password'>Password:</label>
+                    <input type="password" name="password"><br/>
+                    <p>*Password should be at least 8 characters</p>
+                </div>
+                <div class="form-group">
+                    <label for'confirm'>Confirm pw:</label>
+                    <input type="password" name="confirm">
+                </div>
+                <input type="submit" value="Register">
+            </form>
+        </div>
+        <div class="col-md-6">
+        <h3>Login</h3>
+            {% if messages %} 
+                {% if request.session.message_location == 'login' %}
+                    {% for message in messages %}
+                        <p class='text-uppercase'><strong>{{message}}</strong></p>
+                    {% endfor %} 
+                {% endif %}
+            {% endif %}
+            <form action="/authenticate" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for'email'>Email:</label>
+                    <input type="text" name="email">
+                </div>
+                <div class="form-group">
+                    <label for 'password'>Password:</label>
+                    <input type='password' name='password'><br/>
+                </div>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

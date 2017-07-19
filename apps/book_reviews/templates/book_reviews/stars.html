@@ -1,0 +1,13 @@
+{% if review.rating == 1 %}
+<span style='color:yellow'>&#9733;</span>&#9734;&#9734;&#9734;&#9734;
+{% elif review.rating == 2 %}
+<span style='color:yellow'>&#9733;&#9733;</span>&#9734;&#9734;&#9734;
+{% elif review.rating == 3 %}
+<span style='color:yellow'>&#9733;&#9733;&#9733;</span>&#9734;&#9734;
+{% elif review.rating == 4 %}
+<span style='color:yellow'>&#9733;&#9733;&#9733;&#9733;</span>&#9734;
+{% elif review.rating == 5 %}
+<span style='color:yellow'>&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+{% else %}
+&#9734;&#9734;&#9734;&#9734;&#9734;
+{% endif %}

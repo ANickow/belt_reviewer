@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'book_reviews/css/styles.css' %}" media="screen" title="no title"  charset="utf-8">
+    <title>Books Home</title>
+</head>
+<body>
+    <div class="row">
+        <div class='col-md-8'>
+            <h3>Welcome, {{user.alias}}!</h3> 
+        </div>
+        <div class='col-md-4 align-bottom'>
+            <a href='/add'>Add Book and Review</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href='/logout'>Logout</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Recent Book Reviews:</h3>
+            {% for review in reviews %}
+                <div class='indent'>
+                    <p><a href='books/{{review.book.id}}'>{{review.book.title}}</a></p>
+                    <div class='indent'>
+                        <p>Rating: {% include 'book_reviews/stars.html' %}</p>
+                        <p><a href='users/{{review.user.id}}'>{{review.user.alias}}</a> says: <em>{{review.content}}</em></p>
+                        <p><em>Posted on {{review.created_at}}</em>
+                        {% if review.user.id == user.id %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;<a class = 'text-right' href='destroy/{{review.id}}'>Delete this review</a>
+                        {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <h3>Other Books with Reviews</h3>
+            <div class='indent overflow-scroll'>
+                {% for book in books %}
+                    <p><a href='books/{{book.id}}'>{{book.title}}</a></p>
+                {% endfor %}
+            </div>           
+        </div>
+    </div>
+</body>
+</html>
