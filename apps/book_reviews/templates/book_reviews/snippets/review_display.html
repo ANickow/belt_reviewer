@@ -1,0 +1,6 @@
+<p>Rating: {% include 'book_reviews/snippets/stars.html' %}</p>
+<p><a href='{% url 'user' id=review.user.id %}'>{{review.user.alias}}</a> says: <em>{{review.content}}</em></p>
+<p><em>Posted on {{review.created_at}}</em>
+{% if review.user.id == user.id %}
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class = 'text-right' href='{% url 'destroy' id=review.id %}'>Delete this review</a>
+{% endif %}</p>

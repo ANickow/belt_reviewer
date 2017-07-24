@@ -2,7 +2,11 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, HttpResponse, redirect
+# reverse with named spaces
+from django.core.urlresolvers import reverse
+# flash messages
 from django.contrib import messages
+# count as a method on db data
 from django.db.models import Count
 import bcrypt
 from models import User, Book, Author, Review
@@ -19,7 +23,7 @@ def register(request):
             for tag, error in errors.iteritems():
                 messages.error(request, error, extra_tags=tag)
             request.session['message_location']='registration'
-            return redirect('/')
+            return redirect(reverse('index'))
         else:
             name = request.POST['name']
             alias = request.POST['alias']
@@ -29,9 +33,9 @@ def register(request):
             new_user = User.objects.create(name=name, alias=alias, email=email, password_hash=password_hash)
             id = new_user.id
             request.session['logged_in_id']=id
-            return redirect('/books')
+            return redirect(reverse('home'))
     else:
-        return redirect('/')
+        return redirect(reverse('index'))
 
 def authenticate(request):
     if request.method == 'POST':
@@ -42,19 +46,22 @@ def authenticate(request):
             for tag, error in errors.iteritems():
                 messages.error(request, error, extra_tags=tag)
             request.session['message_location']='login'
-            return redirect('/')
+            return redirect(reverse('index'))
         else:
             email = request.POST['email']
             user = User.objects.get(email=email)
-            id = user.id
-            request.session['logged_in_id']=id
-            return redirect('/books')
+            user_id = user.id
+            request.session['logged_in_id']=user_id
+            return redirect(reverse('home'))
     else:
-        return redirect('/')
+        return redirect(reverse('index'))
 
 def home(request):
-    id = request.session['logged_in_id']
-    user = User.objects.get(id=id)
+    try:
+        user_id = request.session['logged_in_id']
+    except:
+        return redirect(reverse('index'))
+    user = User.objects.get(id=user_id)
     last_three_reviews = Review.objects.order_by('-id')[:3]
     books = Book.objects.order_by('title')
     context = {
@@ -62,20 +69,21 @@ def home(request):
         'reviews': last_three_reviews,
         'books': books,
     }
+    request.session['page']='home'
     return render(request, 'book_reviews/home.html', context)
 
 def add(request):
     authors = Author.objects.order_by('name')
+    request.session['page']='add'
     return render(request, 'book_reviews/add.html',{'authors':authors})
 
 def create(request):
     if request.method == 'POST':
-        print request.POST
         errors = Book.objects.review_validator(request.POST)
         if len(errors):
             for tag, error in errors.iteritems():
                 messages.error(request, error, extra_tags=tag)
-            return redirect('/add')
+            return redirect(reverse('add'))
         else:
             title = request.POST['title']
             try:
@@ -96,48 +104,49 @@ def create(request):
                 book = Book.objects.create(title=title, author=author)
             Review.objects.create(content=content, rating=rating, book=book, user=user)
             book_id = book.id
-            return redirect('/books/{}'.format(book_id))
+            return redirect(reverse('book', kwargs={'id':book.id}))
     else:
-        return redirect('/add')
+        return redirect(reverse('add'))
 
 def read_book(request, id):
     try:
         book = Book.objects.get(id=id)
     except:
-        return redirect('/books')
-    id = request.session['logged_in_id']
-    user = User.objects.get(id=id)
+        return redirect(reverse('books'))
+    user_id = request.session['logged_in_id']
+    user = User.objects.get(id=user_id)
     book_reviews = Review.objects.filter(book = book).order_by('-id')
     context = {
         'book': book,
         'book_reviews': book_reviews,
         'user': user
     }
+    request.session['page']='book'
     return render(request, 'book_reviews/book.html', context)
 
 def read_user(request, id):
     try: 
         user = User.objects.annotate(review_count=Count('reviews')).get(id=id)
     except:
-        return redirect('/books')
+        return redirect(reverse('home'))
     user_reviews = Book.objects.filter(reviews__user__id=id).distinct()
     print user_reviews
     context = {
         'user': user,
-        'user_reviews': user_reviews,
+        'books': user_reviews,
     }
+    request.session['page']='user'
     return render(request, 'book_reviews/user.html', context)
 
 def logout(request):
-    del request.session['logged_in_id']
-    request.session.modified = True
-    return redirect('/')
+    request.session.clear()
+    return redirect(reverse('index'))
 
 def destroy_review(request, id):
     try:
         review = Review.objects.get(id=id)
     except: 
-        return redirect('/books')
+        return redirect(reverse('home'))
     book = review.book
     review.delete()
-    return redirect('/books/{}'.format(book.id))
+    return redirect(reverse('book', kwargs={'id':book.id}))

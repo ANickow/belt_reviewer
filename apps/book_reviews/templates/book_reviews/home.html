@@ -15,9 +15,7 @@
             <h3>Welcome, {{user.alias}}!</h3> 
         </div>
         <div class='col-md-4 align-bottom'>
-            <a href='/add'>Add Book and Review</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href='/logout'>Logout</a>
+            {% include 'book_reviews/snippets/header_nav.html' %}
         </div>
     </div>
     <div class="row">
@@ -25,15 +23,9 @@
             <h3>Recent Book Reviews:</h3>
             {% for review in reviews %}
                 <div class='indent'>
-                    <p><a href='books/{{review.book.id}}'>{{review.book.title}}</a></p>
+                    <p><a href='{% url 'book' id=review.book.id %}'>{{review.book.title}}</a></p>
                     <div class='indent'>
-                        <p>Rating: {% include 'book_reviews/stars.html' %}</p>
-                        <p><a href='users/{{review.user.id}}'>{{review.user.alias}}</a> says: <em>{{review.content}}</em></p>
-                        <p><em>Posted on {{review.created_at}}</em>
-                        {% if review.user.id == user.id %}
-                            &nbsp;&nbsp;&nbsp;&nbsp;<a class = 'text-right' href='destroy/{{review.id}}'>Delete this review</a>
-                        {% endif %}
-                        </p>
+                        {% include 'book_reviews/snippets/review_display.html' %}
                     </div>
                 </div>
             {% endfor %}
@@ -41,9 +33,7 @@
         <div class="col-md-6">
             <h3>Other Books with Reviews</h3>
             <div class='indent overflow-scroll'>
-                {% for book in books %}
-                    <p><a href='books/{{book.id}}'>{{book.title}}</a></p>
-                {% endfor %}
+                {% include 'book_reviews/snippets/book_list.html' %}
             </div>           
         </div>
     </div>

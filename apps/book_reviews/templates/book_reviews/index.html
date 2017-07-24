@@ -18,14 +18,10 @@
     <div class="row">
         <div class="col-md-6">
         <h3>Registration</h3>
-            {% if messages %} 
-                {% if request.session.message_location == 'registration' %}
-                    {% for message in messages %}
-                        <p class='text-uppercase'><strong>{{message}}</strong></p>
-                    {% endfor %} 
-                {% endif %}
+            {% if request.session.message_location == 'registration' %}
+                {% include 'book_reviews/snippets/flash_messages.html' %}
             {% endif %}
-            <form action="/register" method="post">
+            <form action="{% url 'register' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for'name'>Name:</label>
@@ -49,18 +45,14 @@
                     <input type="password" name="confirm">
                 </div>
                 <input type="submit" value="Register">
-            </form>
+            </form> 
         </div>
         <div class="col-md-6">
         <h3>Login</h3>
-            {% if messages %} 
-                {% if request.session.message_location == 'login' %}
-                    {% for message in messages %}
-                        <p class='text-uppercase'><strong>{{message}}</strong></p>
-                    {% endfor %} 
-                {% endif %}
+             {% if request.session.message_location == 'login' %}
+                {% include 'book_reviews/snippets/flash_messages.html' %}
             {% endif %}
-            <form action="/authenticate" method="post">
+            <form action="{% url 'login' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for'email'>Email:</label>
@@ -71,7 +63,7 @@
                     <input type='password' name='password'><br/>
                 </div>
                 <input type="submit" value="Login">
-            </form>
+            </form> 
         </div>
     </div>
 </body>

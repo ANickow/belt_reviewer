@@ -1,0 +1,9 @@
+{% if request.session.page != 'home' %}
+<a href='{% url 'home' %}'>Home</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+{% endif %}
+{% if request.session.page != 'add' and request.session.page != 'book' %}
+<a href='{% url 'add' %}'>Add Book and Review</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+{% endif %}
+<a href='{% url 'logout' %}'>Logout</a>

@@ -14,11 +14,7 @@
         <div class='col-md-8'>
         </div>
         <div class='col-md-4'>
-            <a href='/books'>Home</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href='/add'>Add Book and Review</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href='/logout'>Logout</a>
+            {% include 'book_reviews/snippets/header_nav.html' %}
         </div>
     </div>
     <div class="row">
@@ -33,9 +29,7 @@
         <div class="col-md-12">
             <h3>Posted Reviews on the following books:</h3>
             <div class="indent">
-                {% for book in user_reviews %}
-                    <p><a href='/books/{{book.id}}'>{{book.title}}</a></p>
-                {% endfor %}
+                {% include 'book_reviews/snippets/book_list.html' %}
             </div>
         </div>
     </div>

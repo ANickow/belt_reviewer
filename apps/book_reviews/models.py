@@ -24,9 +24,7 @@ class ValidationsManager(models.Manager):
         # e-mail registered second
         try:
             email = post_data['email']
-            print email
             user = User.objects.get(email=email)
-            print user
         except:
             errors['email_not_registered'] = 'Email not recognized.  Please register an account.'
             return errors
@@ -42,6 +40,11 @@ class ValidationsManager(models.Manager):
         errors = {}
         if not EMAIL_REGEX.match(post_data['email']) :
             errors['invalid_email'] = 'Email address is invalid'
+        try:
+            User.objects.get(email = post_data['email'])
+            errors['already_user'] = 'Email address already registered.  Try logging in'
+        except:
+            pass
         if len(post_data['password']) < 8:
             errors['password_length'] = 'Password should be at least 8 characters'
         if post_data['password'] != post_data['confirm']:
@@ -55,6 +58,7 @@ class ValidationsManager(models.Manager):
         if len(post_data['content']) > 1000:
             errors['review_length'] = 'Please keep reviews to 1000 characters or less'
         return errors
+    
 
 class User(models.Model):
     name = models.CharField(max_length=256)
